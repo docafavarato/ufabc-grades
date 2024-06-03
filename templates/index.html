@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/index.css') }}">
+    <script src="https://kit.fontawesome.com/9ae4d8f0c6.js" crossorigin="anonymous"></script>
+    <title>Grades UFABC</title>
+</head>
+
+<body>
+{% block body %}
+    <nav class="navbar bg-dark">
+        <div class="container-fluid" style="margin-left: 1rem;">
+            <a class="navbar-brand" style="display: flex; align-items: center;">
+                <img src="static/images/1200px-Ufabc_logo.png" alt="Logo" width="50" height="50" class="d-inline-block align-text-top">
+                <span style="font-size: 22px; margin-left: 1rem; color: white;">UFABC Grades</span>
+            </a>    
+        </div>
+    </nav>
+
+    <div class="modal" tabindex="-1" id="tutorialModal">
+        <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Como ver os códigos de turma?</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>Acesse o <a href="https://sig.ufabc.edu.br/sigaa/verMenuPrincipal.do">SIGAA</a>, faça login e clique em "Emitir Atestado de Matrícula".</p>
+                <img src="static/images/sigaa1.png" style="min-width: 100%; max-width: 100%; margin-bottom: 1rem;">
+                <p>Copie os códigos da coluna "Turma" e cole eles aqui.</p>
+                <img src="static/images/sigaa2.png" style="min-width: 100%; max-width: 100%;"">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+            </div>
+        </div>
+        </div>
+    </div>
+    <div class="container container-form" style="margin-top: 2rem;">
+        <form method="post">
+            <div class="mb-3">
+              <label class="form-label">Códigos de turma</label>
+              <input type="text" class="form-control" id="codigosdeturma" name="codigosdeturma">
+              <div id="emailHelp" class="form-text">Insira os códigos, separando-os por espaços.</div>
+            </div>
+            <button type="submit" class="btn btn-primary">Montar grades</button>
+            <button type="button" class="btn btn-info" style="color: white;" data-bs-toggle="modal" data-bs-target="#tutorialModal">Como vejo meus códigos?</button>
+          </form>
+    </div>
+
+    <div class="container" style="margin-top: 2rem; margin-bottom: 3rem;">
+        <h1 style="font-size: 2rem;">Semana A (primeira quinzena)</h1>
+        <table class="table table-striped table-hover table-bordered">
+            <thead>
+                <tr>
+                    <th scope="col">Segunda</th>
+                    <th scope="col">Terça</th>
+                    <th scope="col">Quarta</th>
+                    <th scope="col">Quinta</th>
+                    <th scope="col">Sexta</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% set max_items_per_line = 5 %}
+                {% set items_by_day = {
+                    'SEGUNDA': [],
+                    'TERÇA': [],
+                    'QUARTA': [],
+                    'QUINTA': [],
+                    'SEXTA': []
+                } %}
+                
+                {% for m in primeira_semana %}
+                    {% for h in m.horarios %}
+                        {% if h.periodicidade != "quinzenal (II)" %}
+                            {% set item = {'nome': m.nome_materia, 'horario': h.horario} %}
+                            {% set _ = items_by_day[h.dia].append(item) %}
+                        {% endif %}
+                    {% endfor %}
+                {% endfor %}
+                
+                {% set num_lines = range(0, max_items_per_line) %}
+                {% for line in num_lines %}
+                    <tr>
+                        {% for day in ['SEGUNDA', 'TERÇA', 'QUARTA', 'QUINTA', 'SEXTA'] %}
+                            <td>
+                                {% set current_items = items_by_day[day] %}
+                                {% if current_items and line < current_items|length %}
+                                    <div class="schedule-cell">
+                                        {{ current_items[line].nome }}
+                                        <span class="horario">{{ current_items[line].horario }}</span>
+                                    </div>
+                                {% endif %}
+                            </td>
+                        {% endfor %}
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <div class="container">
+        <h1 style="margin-top: 2rem; font-size: 2rem;">Semana B (segunda quinzena)</h1>
+        <table class="table table-hover table-striped table-bordered">
+            <thead>
+                <tr>
+                    <th scope="col">Segunda</th>
+                    <th scope="col">Terça</th>
+                    <th scope="col">Quarta</th>
+                    <th scope="col">Quinta</th>
+                    <th scope="col">Sexta</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% set max_items_per_line = 5 %}
+                {# Organiza as matérias por dia da semana #}
+                {% set items_by_day = {
+                    'SEGUNDA': [],
+                    'TERÇA': [],
+                    'QUARTA': [],
+                    'QUINTA': [],
+                    'SEXTA': []
+                } %}
+                
+                {% for m in primeira_semana %}
+                    {% for h in m.horarios %}
+                        {% if h.periodicidade != "quinzenal (I)" %}
+                            {% set item = {'nome': m.nome_materia, 'horario': h.horario} %}
+                            {% set _ = items_by_day[h.dia].append(item) %}
+                        {% endif %}
+                    {% endfor %}
+                {% endfor %}
+                
+                {# Renderiza a tabela #}
+                {% set num_lines = range(0, max_items_per_line) %}
+                {% for line in num_lines %}
+                    <tr>
+                        {% for day in ['SEGUNDA', 'TERÇA', 'QUARTA', 'QUINTA', 'SEXTA'] %}
+                            <td>
+                                {% set current_items = items_by_day[day] %}
+                                {% if current_items and line < current_items|length %}
+                                    <div class="schedule-cell">
+                                        {{ current_items[line].nome }}
+                                        <span class="horario">{{ current_items[line].horario }}</span>
+                                    </div>
+                                {% endif %}
+                            </td>
+                        {% endfor %}
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <div class="container" style="margin-bottom: 2rem;">
+        <h1 style="margin-top: 2rem; font-size: 2rem;">Suas matérias</h1>
+        <table class="table table-hover table-bordered">
+            <tbody>
+                {% for m in primeira_semana %}
+                    <tr>
+                        <td>
+                            <b>{{ m.codigo }}</b> <span class="suas_materias_nome">{{ m.nome_materia}}</span> - {{ m.turma }} ({{ m.campus }})
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <div class="container">
+        <footer class="d-flex flex-wrap justify-content-between align-items-center py-3 my-4 border-top">
+          <div class="col-md-4 d-flex align-items-center">
+            <a href="/" class="mb-3 me-2 mb-md-0 text-muted text-decoration-none lh-1">
+              <svg class="bi" width="30" height="24"><use xlink:href="#bootstrap"/></svg>
+            </a>
+            <span class="mb-3 mb-md-0 text-muted">&copy; 2024 docafavarato</span>
+          </div>
+      
+          <ul class="nav col-md-4 justify-content-end list-unstyled d-flex">
+            <li class="ms-3"><a class="text-muted" href="https://github.com/docafavarato"><i class="fa-brands fa-github" style="font-size: 24px;"></i></a></li>
+            <li class="ms-3"><a class="text-muted" href="https://www.linkedin.com/in/jo%C3%A3o-pedro-favarato-71800b204/"><i class="fa-brands fa-linkedin" style="font-size: 24px;"></i></a></li>
+          </ul>
+        </footer>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+        crossorigin="anonymous"></script>
+{% endblock %}       
+</body>
+</html>

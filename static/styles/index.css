@@ -1,0 +1,25 @@
+.schedule-cell {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 1rem;
+}
+
+.horario {
+    color: green;
+    font-weight: bold;
+}
+
+.modal-content {
+    min-width: 30vw !important;
+}
+
+.materias {
+    display: flex;
+    flex-direction: column;
+}
+
+.suas_materias_nome {
+    color: rgb(56, 56, 235);
+    font-style:oblique;
+    margin-left: 1rem;
+}
