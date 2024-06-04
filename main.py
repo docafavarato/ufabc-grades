@@ -1,6 +1,5 @@
 from flask import Flask, render_template, url_for, request, redirect
 from codes import Ufabc, apology
-from datetime import datetime
 
 uf = Ufabc()
 app = Flask(__name__)

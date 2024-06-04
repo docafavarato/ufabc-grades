@@ -20,6 +20,8 @@
 
 .suas_materias_nome {
     color: rgb(56, 56, 235);
-    font-style:oblique;
-    margin-left: 1rem;
+}
+
+.suas_materias_creditos {
+    color: green;
 }

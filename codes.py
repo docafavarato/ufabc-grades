@@ -1,6 +1,7 @@
 import requests
 import json
-import os
+import json
+import re
 from flask import render_template
 
 class Ufabc:
@@ -40,13 +41,23 @@ class Ufabc:
                     
                 materia = {
                     "nome_extenso": i["nome"],
+                    "nome_abreviacao": acronym(i["nome"].replace(formatted, "")),
                     "nome_materia": i["nome"].replace(formatted, ""),
                     "campus": campus,
                     "horarios": horarios,
                     "codigo": i["codigo"],  
                     "turma": turma,
+                    "creditos": i["creditos"]
                 }
         return materia
 
 def apology(message, go_back):
     return render_template("apology.html", content=message, go_back=go_back)
+
+def acronym(string):
+    oupt = string[0]
+    for i in range(1, len(string)):
+        if string[i-1] == ' ':
+            oupt += string[i]
+    
+    return oupt.upper()
