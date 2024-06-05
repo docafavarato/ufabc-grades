@@ -70,7 +70,6 @@
                 </tr>
             </thead>
             <tbody>
-                {% set max_items_per_line = 5 %}
                 {% set items_by_day = {
                     'SEGUNDA': [],
                     'TERÇA': [],
@@ -88,7 +87,7 @@
                     {% endfor %}
                 {% endfor %}
                 
-                {% set num_lines = range(0, max_items_per_line) %}
+                {% set num_lines = range(0, linhas_primeira) %}
                 {% for line in num_lines %}
                     <tr>
                         {% for day in ['SEGUNDA', 'TERÇA', 'QUARTA', 'QUINTA', 'SEXTA'] %}
@@ -126,8 +125,6 @@
                 </tr>
             </thead>
             <tbody>
-                {% set max_items_per_line = 5 %}
-                {# Organiza as matérias por dia da semana #}
                 {% set items_by_day = {
                     'SEGUNDA': [],
                     'TERÇA': [],
@@ -145,7 +142,7 @@
                     {% endfor %}
                 {% endfor %}
 
-                {% set num_lines = range(0, max_items_per_line) %}
+                {% set num_lines = range(0, linhas_segunda) %}
                 {% for line in num_lines %}
                     <tr>
                         {% for day in ['SEGUNDA', 'TERÇA', 'QUARTA', 'QUINTA', 'SEXTA'] %}
