@@ -57,7 +57,7 @@ def apology(message, go_back):
 def acronym(string):
     oupt = string[0]
     for i in range(1, len(string)):
-        if string[i-1] == ' ':
+        if string[i-1] == ' ' and string[i+1] != ' ':
             oupt += string[i]
     
     return oupt.upper()
