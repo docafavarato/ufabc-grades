@@ -48,13 +48,13 @@
             </div>
             <ul>
                 <li>As aulas de sábado ainda não são suportadas, pois o aplicativo foi feito tendo os ingressantes como foco.</li>
-                <li>As aulas de sábado serão futuramente adicionadas.</li>
                 <li>Foi corrigido o erro na geração dos acrônimos.</li>
             </ul>
             <hr>
-            <a href="https://github.com/docafavarato/ufabc-grades" style="color: black;"><p class="mb-0"><strong>v1.1</strong></a> (08/06/2024)</p>
+            <a href="https://github.com/docafavarato/ufabc-grades" style="color: black;"><p class="mb-0"><strong>v1.2</strong></a> (14/06/2024)</p>
         </div>
     </div>
+
     <div class="container container-form" style="margin-top: 2rem;">
         <form method="post">
             <div class="mb-3">
@@ -65,6 +65,17 @@
             <button type="submit" class="btn btn-primary">Montar grades</button>
             <button type="button" class="btn btn-info" style="color: white;" data-bs-toggle="modal" data-bs-target="#tutorialModal">Como vejo meus códigos?</button>
           </form>
+    </div>
+
+    <div class="container" style="margin-top: 2rem;">
+        <div class="alert alert-info no-print show" role="alert">
+            <div class="alert-heading">
+                <h5>Qual tabela devo considerar pra essa semana?</h5>
+            </div>
+            <span>
+                Estamos na semana <b>{{ semana }}</b>, portanto, considere a tabela da semana <b>{% if quinzena == 1 %}A{% else %}B{% endif %}</b>.
+            </span>
+        </div>
     </div>
 
     <div class="container" style="margin-top: 2rem; margin-bottom: 3rem;">
@@ -106,7 +117,7 @@
                 {% for line in num_lines %}
                     <tr>
                         {% for day in ['SEGUNDA', 'TERÇA', 'QUARTA', 'QUINTA', 'SEXTA'] %}
-                            <td>
+                            <td class="table-cell">
                                 {% set current_items = items_by_day[day] %}
                                 {% if current_items and line < current_items|length %}
                                     <div class="schedule-cell">
@@ -161,7 +172,7 @@
                 {% for line in num_lines %}
                     <tr>
                         {% for day in ['SEGUNDA', 'TERÇA', 'QUARTA', 'QUINTA', 'SEXTA'] %}
-                            <td>
+                            <td class="table-cell">
                                 {% set current_items = items_by_day[day] %}
                                 {% if current_items and line < current_items|length %}
                                     <div class="schedule-cell">

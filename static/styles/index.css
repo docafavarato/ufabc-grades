@@ -1,12 +1,14 @@
+
 .schedule-cell {
     display: flex;
     flex-direction: column;
-    margin-bottom: 1rem;
+    min-height: 110px !important;
 }
 
 .horario {
     color: green;
     font-weight: bold;
+    margin-top: auto;
 }
 
 .modal-content {
