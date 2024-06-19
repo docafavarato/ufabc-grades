@@ -1,8 +1,8 @@
 import requests
 import json
 import json
-import re
 from flask import render_template
+from datetime import datetime
 
 class Ufabc:
     def __init__(self):
@@ -61,3 +61,10 @@ def acronym(string):
             oupt += string[i]
     
     return oupt.upper()
+
+def find_week(date):
+    year, week, _ = date.isocalendar()
+    if week % 2 == 1:
+        return 1
+    else:
+        return 2

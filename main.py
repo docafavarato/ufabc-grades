@@ -1,15 +1,29 @@
 import math
 from flask import Flask, render_template, url_for, request, redirect
-from codes import Ufabc, apology
+from codes import Ufabc, apology,find_week
+from datetime import datetime
 
 uf = Ufabc()
 app = Flask(__name__)
 
+dias_da_semana = {
+    "Monday": "SEGUNDA",
+    "Tuesday": "TERÇA",
+    "Wednesday": "QUARTA",
+    "Thursday": "QUINTA",
+    "Friday": "SEXTA",
+    "Saturday": "SÁBADO",
+    "Sunday": "DOMINGO"
+}
+
 @app.route("/", methods=["GET", "POST"])
 def index():
+    week = find_week(datetime.today())
     if request.method == "GET":
-        return render_template("index.html", primeira_semana=[], segunda_semana=[], duas_semanas=[], linhas_primeira=5, linhas_segunda=5)
+        return render_template("index.html", primeira_semana=[], segunda_semana=[], duas_semanas=[], linhas_primeira=5, linhas_segunda=5, week=week)
     elif request.method == "POST":
+        dia_semana_ing = datetime.today().strftime('%A')
+        dia_atual = dias_da_semana[dia_semana_ing]
         primeira_semana, segunda_semana = [], []
         codigos = set(request.form.get("codigosdeturma").split())
         horarios_primeira_semana = 0 
@@ -39,7 +53,7 @@ def index():
             
         duas_semanas = list(primeira_semana)
         duas_semanas.extend(x for x in segunda_semana if x not in duas_semanas)
-        return render_template("index.html", primeira_semana=primeira_semana, segunda_semana=segunda_semana, duas_semanas=duas_semanas,linhas_primeira=math.ceil(horarios_primeira_semana / 5), linhas_segunda=math.ceil(horarios_segunda_semana / 5))
+        return render_template("index.html", dia_atual=dia_atual, primeira_semana=primeira_semana, segunda_semana=segunda_semana, duas_semanas=duas_semanas,linhas_primeira=math.ceil(horarios_primeira_semana / 5), linhas_segunda=math.ceil(horarios_segunda_semana / 5), week=week)
             
 if __name__ == '__main__':
     app.run(debug=True)

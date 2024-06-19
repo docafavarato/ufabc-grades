@@ -48,10 +48,10 @@
             </div>
             <ul>
                 <li>As aulas de sábado ainda não são suportadas, pois o aplicativo foi feito tendo os ingressantes como foco.</li>
-                <li>Foi corrigido o erro na geração dos acrônimos.</li>
+                <li>Agora o aplicativo informa qual grade você deve seguir na semana e exatamente quais aulas você tem hoje.</li>
             </ul>
             <hr>
-            <a href="https://github.com/docafavarato/ufabc-grades" style="color: black;"><p class="mb-0"><strong>v1.2</strong></a> (14/06/2024)</p>
+            <a href="https://github.com/docafavarato/ufabc-grades" style="color: black;"><p class="mb-0"><strong>v1.3</strong></a> (19/06/2024)</p>
         </div>
     </div>
 
@@ -73,7 +73,7 @@
                 <h5>Qual tabela devo considerar pra essa semana?</h5>
             </div>
             <span>
-                Estamos na semana <b>{{ semana }}</b>, portanto, considere a tabela da semana <b>{% if quinzena == 1 %}A{% else %}B{% endif %}</b>.
+                Estamos na quinzena <b>{{ week }}</b>, portanto, considere a tabela da semana <b>{% if week == 1 %}A{% else %}B{% endif %}</b> até o fim da semana.
             </span>
         </div>
     </div>
@@ -187,6 +187,50 @@
             </tbody>
         </table>
     </div>
+
+    <div class="container">
+        <h1 style="margin-top: 2rem; font-size: 2rem;">Que aulas tenho hoje?</h1>
+        {% if dia_atual %}
+          <table class="table table-hover table-striped table-bordered">
+            <thead>
+              <tr>
+                <th scope="col">{{ dia_atual }} - Quinzena {{ week }}</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% set items_by_day = [] %}
+              
+              {% for m in duas_semanas %}
+                  {% for h in m.horarios %}
+                      {% if h.dia == dia_atual %}
+                          {% if h.periodicidade == "semanal" or (week == 1 and h.periodicidade == "quinzenal (I)") or (week == 2 and h.periodicidade == "quinzenal (II)") %}
+                              {% set item = {'nome': m.nome_materia, 'horario': h.horario, 'nome_abreviacao': m.nome_abreviacao} %}
+                              {% set _ = items_by_day.append(item) %}
+                          {% endif %}
+                      {% endif %}
+                  {% endfor %}
+              {% endfor %}
+    
+              {% for item in items_by_day %}
+                  <tr>
+                      <td class="table-cell">
+                        <div class="schedule-cell">
+                            <span>{{ item.nome }} <b>({{ item.nome_abreviacao }})</b></span>
+                            <span class="horario">{{ item.horario }}</span>
+                        </div>
+                      </td>
+                  </tr>
+              {% endfor %}
+    
+              {% if items_by_day|length == 0 %}
+                  <tr>
+                      <td>Não há aulas para hoje na semana {{ week }}.</td>
+                  </tr>
+              {% endif %}
+            </tbody>
+          </table>
+        {% endif %}
+      </div>
 
     <div class="container" style="margin-bottom: 2rem;">
         <h1 style="margin-top: 2rem; font-size: 2rem;">Suas matérias</h1>
