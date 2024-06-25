@@ -1,7 +1,8 @@
 import math
 from flask import Flask, render_template, url_for, request, redirect
 from codes import Ufabc, apology,find_week
-from datetime import datetime
+import datetime
+from zoneinfo import ZoneInfo
 
 uf = Ufabc()
 app = Flask(__name__)
@@ -18,11 +19,11 @@ dias_da_semana = {
 
 @app.route("/", methods=["GET", "POST"])
 def index():
-    week = find_week(datetime.today())
+    week = find_week(datetime.datetime.now(ZoneInfo("Brazil/East")))
     if request.method == "GET":
         return render_template("index.html", primeira_semana=[], segunda_semana=[], duas_semanas=[], linhas_primeira=5, linhas_segunda=5, week=week)
     elif request.method == "POST":
-        dia_semana_ing = datetime.today().strftime('%A')
+        dia_semana_ing = datetime.datetime.now(ZoneInfo("Brazil/East")).strftime('%A')
         dia_atual = dias_da_semana[dia_semana_ing]
         primeira_semana, segunda_semana = [], []
         codigos = set(request.form.get("codigosdeturma").split())
